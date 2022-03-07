@@ -38,11 +38,13 @@ class DownloadViewModel @Inject constructor(
             context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
         val downloadUri = Uri.parse(url)
+        val fileName = url.substring(url.lastIndexOf("/") + 1)
 
         val request = DownloadManager.Request(downloadUri)
-            .setTitle(url.substring(url.lastIndexOf("/") + 1))
+            .setTitle(fileName)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setAllowedOverRoaming(false)
+            .setDestinationInExternalPublicDir(directory.toString(), fileName);
 
         val downloadId = downloadManager.enqueue(request)
 

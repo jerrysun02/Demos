@@ -1,13 +1,16 @@
 package com.langlab.demos.download
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.langlab.demos.R
 import com.langlab.demos.databinding.FragmentDownloadBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +37,7 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //checkWritePermission()
         val url = "https://www.warrantylife.com/bundles/warrantylifesite/images/home/black-broken-phones.jpg"
 
         binding.button1.setOnClickListener {
@@ -47,5 +51,21 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
 
     private val showState = Observer<String> {
         binding.textView1.text = it
+    }
+
+
+    private fun checkWritePermission() {
+        val writePermission: Boolean = ContextCompat.checkSelfPermission(
+                requireActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+
+       if (!writePermission) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                100
+            )
+        }
     }
 }
